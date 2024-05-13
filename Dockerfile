@@ -2,6 +2,7 @@ FROM scratch
 FROM ubuntu:20.04
 LABEL maintainer="andreas.wombacher@aureliusenterprise.com"
 ARG VERSION=2.2.0
+ARG GREMLIN_VERSION=3.7.1
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update
@@ -60,25 +61,25 @@ RUN cd /opt/apache-atlas-${VERSION}/bin \
 
 # setup gremlin console 
 # RUN cd /opt \
-#     && wget --no-check-certificate https://dlcdn.apache.org/tinkerpop/3.5.3/apache-tinkerpop-gremlin-console-3.5.3-bin.zip \
-#     && unzip apache-tinkerpop-gremlin-console-3.5.3-bin.zip \
-#     && cd /opt/apache-tinkerpop-gremlin-console-3.5.3/conf \
+#     && wget --no-check-certificate https://dlcdn.apache.org/tinkerpop/${GREMLIN_VERSION}/apache-tinkerpop-gremlin-console-${GREMLIN_VERSION}-bin.zip \
+#     && unzip apache-tinkerpop-gremlin-console-${GREMLIN_VERSION}-bin.zip \
+#     && cd /opt/apache-tinkerpop-gremlin-console-${GREMLIN_VERSION}/conf \
 #     && sed -i "s/localhost/ip6-localhost/g" ./remote.yaml \
 
 # setup basis for gremlin server
 RUN cd /opt \
-    && wget --no-check-certificate https://dlcdn.apache.org/tinkerpop/3.5.3/apache-tinkerpop-gremlin-server-3.5.3-bin.zip \
-    && unzip apache-tinkerpop-gremlin-server-3.5.3-bin.zip \
-    && ln -s /opt/apache-atlas-2.2.0/server/webapp/atlas/WEB-INF/lib/*.jar /opt/apache-tinkerpop-gremlin-server-3.5.3/lib 2>/dev/null \
-    && rm -f /opt/apache-tinkerpop-gremlin-server-3.5.3/lib/atlas-webapp-2.2.0.jar \
-    && rm -f /opt/apache-tinkerpop-gremlin-server-3.5.3/lib/netty-3.10.5.Final.jar \
-    && rm -f /opt/apache-tinkerpop-gremlin-server-3.5.3/lib/netty-all-4.0.52.Final.jar \
-    && rm -f /opt/apache-tinkerpop-gremlin-server-3.5.1/lib/groovy-*.jar \
-    && ln -s /opt/apache-atlas-2.2.0/server/webapp/atlas/WEB-INF/lib/groovy-*.jar /opt/apache-tinkerpop-gremlin-server-3.5.3/lib \
+    && wget --no-check-certificate https://dlcdn.apache.org/tinkerpop/${GREMLIN_VERSION}/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}-bin.zip \
+    && unzip apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}-bin.zip \
+    && ln -s /opt/apache-atlas-2.2.0/server/webapp/atlas/WEB-INF/lib/*.jar /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/lib 2>/dev/null \
+    && rm -f /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/lib/atlas-webapp-2.2.0.jar \
+    && rm -f /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/lib/netty-3.10.5.Final.jar \
+    && rm -f /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/lib/netty-all-4.0.52.Final.jar \
+    && rm -f /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/lib/groovy-*.jar \
+    && ln -s /opt/apache-atlas-2.2.0/server/webapp/atlas/WEB-INF/lib/groovy-*.jar /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/lib \
     && sed -i 's/assistive_technologies=org.GNOME.Accessibility.AtkWrapper/#assistive_technologies=org.GNOME.Accessibility.AtkWrapper/g' /etc/java-8-openjdk/accessibility.properties 
 
-COPY conf/gremlin/gremlin-server-atlas.yaml /opt/apache-tinkerpop-gremlin-server-3.5.1/conf/gremlin-server-atlas.yaml
-COPY conf/gremlin/janusgraph-hbase-solr.properties /opt/apache-tinkerpop-gremlin-server-3.5.1/conf/janusgraph-hbase-solr.properties
+COPY conf/gremlin/gremlin-server-atlas.yaml /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/conf/gremlin-server-atlas.yaml
+COPY conf/gremlin/janusgraph-hbase-solr.properties /opt/apache-tinkerpop-gremlin-server-${GREMLIN_VERSION}/conf/janusgraph-hbase-solr.properties
 COPY bin/start-gremlin-server.sh /opt/apache-atlas-${VERSION}/bin/start-gremlin-server.sh
 
 RUN chmod 700 /opt/apache-atlas-${VERSION}/bin/start-gremlin-server.sh
